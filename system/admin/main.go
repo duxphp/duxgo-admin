@@ -16,6 +16,7 @@ import (
 	"github.com/samber/lo"
 	"github.com/spf13/cast"
 	"os"
+	"regexp"
 	"runtime"
 	"strconv"
 	"syscall"
@@ -128,22 +129,25 @@ func Main(ctx echo.Context) error {
 	operateChart := chart.New("date").Legend(true, "right", "top").Column().Date(startTime, carbon.Now().ToDateString(), "day", "01-02")
 	operateChart.Data("日志量", operateMaps)
 	assign["operateChart"] = operateChart.Render()
-	//
-	//sqlVersion := []map[string]any{}
-	//core.Db.Raw(`SHOW VARIABLES LIKE "version"`).Scan(&sqlVersion)
-	//
-	//redisInfo, _ := core.Redis.Info(core.Ctx).Result()
-	//
-	//myRegex, _ := regexp.Compile(`redis_version:(.*)`)
-	//found := myRegex.FindStringSubmatch(redisInfo)
-	//redisVer := found[1]
-	//assign["ver"] = map[string]any{
-	//	"go":    runtime.Version(),
-	//	"echo":  echo.Version,
-	//	"dux":   core.Version,
-	//	"mysql": sqlVersion[0]["Value"],
-	//	"redis": redisVer,
-	//}
+
+	sqlVersion := []map[string]any{}
+	core.Db.Raw(`SHOW VARIABLES LIKE "version"`).Scan(&sqlVersion)
+
+	redisVer := "disabled"
+	if core.Redis != nil {
+		redisInfo, _ := core.Redis.Info(core.Ctx).Result()
+		myRegex, _ := regexp.Compile(`redis_version:(.*)`)
+		found := myRegex.FindStringSubmatch(redisInfo)
+		redisVer = found[1]
+	}
+
+	assign["ver"] = map[string]any{
+		"go":    runtime.Version(),
+		"echo":  echo.Version,
+		"dux":   core.Version,
+		"mysql": sqlVersion[0]["Value"],
+		"redis": redisVer,
+	}
 
 	client := resty.New().SetTimeout(2 * time.Second).R()
 	resp, _ := client.Get("http://ip.dhcp.cn/?ip")
