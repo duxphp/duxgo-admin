@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/duxphp/duxgo-admin/system/service"
-	"github.com/duxphp/duxgo/core"
+	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/hibiken/asynq"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
@@ -21,7 +21,7 @@ func ControlInit() {
 }
 
 func getLumberjack(name string) *lumberjack.Logger {
-	path := core.Config["app"].GetString("logger.service.path")
+	path := coreConfig.Get("app").GetString("logger.service.path")
 	return &lumberjack.Logger{
 		Filename:   path + "/" + name + ".log",
 		MaxSize:    1024,

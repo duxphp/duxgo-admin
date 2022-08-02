@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"github.com/duxphp/duxgo-admin/system/model"
+	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/duxphp/duxgo/core"
 	"github.com/duxphp/duxgo/exception"
 	"github.com/hibiken/asynq"
@@ -44,7 +45,7 @@ func Visitor(ctx context.Context, t *asynq.Task) error {
 	// 统计访客
 	requestID, _ := core.Redis.Get(core.Ctx, "visitor:requestID").Result()
 	// 打开日志文件
-	fd, err := os.Open(core.Config["app"].GetString("logger.request.path"))
+	fd, err := os.Open(coreConfig.Get("app").GetString("logger.request.path"))
 	if err != nil {
 		return nil
 	}

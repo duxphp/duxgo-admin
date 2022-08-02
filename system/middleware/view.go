@@ -2,9 +2,12 @@ package middleware
 
 import (
 	"fmt"
+	duxUI "github.com/duxphp/duxgo-ui"
+	"github.com/duxphp/duxgo/config"
+	"github.com/duxphp/duxgo/util/function"
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/cast"
 	"net/http"
-	"strings"
 )
 
 type login struct {
@@ -29,28 +32,27 @@ type ui struct {
 
 func AdminViewHandler(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-
-		if !wantsJson(c) {
-			//css := duxUI.ConfigManifest["css"].([]any)
+		if !function.IsAjax(c) {
+			css := duxUI.ConfigManifest["css"].([]any)
 			params := ui{
-				//Css:  "/" + cast.ToString(css[0]),
-				//Js:   "/" + cast.ToString(duxUI.ConfigManifest["file"]),
-				//Name: core.Config["info"].GetString("info.name"),
-				//Logo: "/images/logo.svg",
-				//Login: login{
-				//	Logo:    "/images/logo.svg",
-				//	Title:   core.Config["info"].GetString("info.name"),
-				//	Name:    "系统登录",
-				//	Desc:    core.Config["info"].GetString("info.description"),
-				//	Contact: core.Config["info"].GetString("info.copyright"),
-				//	Side: []string{
-				//		"/images/login-side.png",
-				//	},
-				//	Foot: "/images/login-foot.png",
-				//},
-				//Socket: map[string]string{
-				//	"api": "/admin/ws",
-				//},
+				Css:  "/" + cast.ToString(css[0]),
+				Js:   "/" + cast.ToString(duxUI.ConfigManifest["file"]),
+				Name: config.Get("info").GetString("info.name"),
+				Logo: "/images/logo.svg",
+				Login: login{
+					Logo:    "/images/logo.svg",
+					Title:   config.Get("info").GetString("info.name"),
+					Name:    "系统登录",
+					Desc:    config.Get("info").GetString("info.description"),
+					Contact: config.Get("info").GetString("info.copyright"),
+					Side: []string{
+						"/images/login-side.png",
+					},
+					Foot: "/images/login-foot.png",
+				},
+				Socket: map[string]string{
+					"api": "/admin/ws",
+				},
 			}
 
 			fmt.Println("渲染页面")
@@ -58,16 +60,4 @@ func AdminViewHandler(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		return next(c)
 	}
-}
-
-func wantsJson(ctx echo.Context) bool {
-	xr := ctx.Request().Header.Get("X-Requested-With")
-	if xr != "" && strings.Index(xr, "XMLHttpRequest") != -1 {
-		return true
-	}
-	accept := ctx.Request().Header.Get("Accept")
-	if strings.Index(accept, "/json") != -1 || strings.Index(accept, "/+json") != -1 {
-		return true
-	}
-	return false
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/duxphp/duxgo-admin/system/model"
 	toolsModel "github.com/duxphp/duxgo-admin/tools/model"
+	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/duxphp/duxgo/core"
 	"github.com/duxphp/duxgo/pkg/chart"
 	coreRegister "github.com/duxphp/duxgo/register"
@@ -155,8 +156,8 @@ func Main(ctx echo.Context) error {
 		"os":         runtime.GOOS,
 		"ip":         ip,
 		"pid":        os.Getpid(),
-		"uploadSize": core.Config["storage"].Get("driver.maxSize"),
-		"timeout":    core.Config["app"].Get("server.timeout"),
+		"uploadSize": coreConfig.Get("storage").Get("driver.maxSize"),
+		"timeout":    coreConfig.Get("app").Get("server.timeout"),
 		"freeDisk":   getFreeDisk() / 1024 / 1024 / 1024,
 	}
 

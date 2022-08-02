@@ -106,6 +106,8 @@ github.com/duxphp/duxgo v0.0.0-20220802024953-ed9b5e89985f h1:fz2fHUz7LbhHDCk3vr
 github.com/duxphp/duxgo v0.0.0-20220802024953-ed9b5e89985f/go.mod h1:gp1VqQ+EWzp0WeckdBXGIGbUAPhFs5XxxtOYKFkkAV0=
 github.com/duxphp/duxgo v0.0.0-20220802030748-e826f77c4958 h1:4sFzxb4LEyJV4dyKZxmPgqBY2ie+EJHi5ycBku2zFhA=
 github.com/duxphp/duxgo v0.0.0-20220802030748-e826f77c4958/go.mod h1:gp1VqQ+EWzp0WeckdBXGIGbUAPhFs5XxxtOYKFkkAV0=
+github.com/duxphp/duxgo v0.0.0-20220802044455-703a8f7e2208 h1:To5ORBgBtL8/asEja8LV3GW9VG8cTQuu4oEuGxXPT/4=
+github.com/duxphp/duxgo v0.0.0-20220802044455-703a8f7e2208/go.mod h1:gp1VqQ+EWzp0WeckdBXGIGbUAPhFs5XxxtOYKFkkAV0=
 github.com/duxphp/duxgo-ui v0.0.0-20220730101403-b651a008e87f h1:3b6+FX5KFvSBFAW7CrDjqOSuvMpQ3IlepRNU7SHCMgw=
 github.com/duxphp/duxgo-ui v0.0.0-20220730101403-b651a008e87f/go.mod h1://90rF5UlQHVGqUsVatBZwOoMT356JCFhiqdioBjt7U=
 github.com/duxphp/duxgo-ui v0.0.0-20220802030217-b016cfa6e15f h1:A9rUk+w4qA4zbbDgv5KkBpfRHAJcGZSU0WCLuW/Gzcg=

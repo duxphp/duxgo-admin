@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"github.com/dustin/go-humanize"
+	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/duxphp/duxgo/core"
 	"github.com/duxphp/duxgo/util/function"
 	"github.com/shirou/gopsutil/v3/host"
@@ -74,7 +75,7 @@ func GetMonitorData() *MonitorData {
 
 // GetMonitorLog 获取监控日志
 func GetMonitorLog() []map[string]any {
-	path := core.Config["app"].GetString("logger.service.path")
+	path := coreConfig.Get("app").GetString("logger.service.path")
 	loadFiles, _ := filepath.Glob(path + "/monitor*.log")
 	loadData := passingFiles(loadFiles)
 	return loadData

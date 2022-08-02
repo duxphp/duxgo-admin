@@ -5,7 +5,7 @@ import (
 	"github.com/duxphp/duxgo-ui/lib/form"
 	"github.com/duxphp/duxgo-ui/lib/formLayout"
 	"github.com/duxphp/duxgo-ui/lib/widget"
-	"github.com/duxphp/duxgo/core"
+	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
 	"syscall"
@@ -24,10 +24,9 @@ func settingForm(ctx echo.Context) *form.Form {
 	formUI := form.NewForm()
 	formUI.SetBack(false)
 
-	infoConfig := core.Config["info"]
-	appConfig := core.Config["app"]
-	storageConfig := core.Config["storage"]
-	messageConfig := core.Config["push"]
+	infoConfig := coreConfig.Get("info")
+	appConfig := coreConfig.Get("app")
+	storageConfig := coreConfig.Get("storage")
 
 	data := map[string]any{
 		"info.name":             infoConfig.Get("info.name"),
@@ -53,14 +52,6 @@ func settingForm(ctx echo.Context) *form.Form {
 		"storage.imageWater.opacity":  storageConfig.GetFloat64("imageWater.opacity"),
 		"storage.imageWater.position": storageConfig.GetInt("imageWater.position"),
 		"storage.imageWater.margin":   storageConfig.GetInt("imageWater.margin"),
-
-		"message.tpl.code":                  messageConfig.Get("tpl.code"),
-		"message.code.expired":              messageConfig.GetInt("code.expired"),
-		"message.code.retry":                messageConfig.GetInt("code.retry"),
-		"message.driver.type":               messageConfig.Get("driver.type"),
-		"message.driver.chuanglan.account":  messageConfig.Get("driver.chuanglan.account"),
-		"message.driver.chuanglan.password": messageConfig.Get("driver.chuanglan.password"),
-		"message.driver.chuanglan.url":      messageConfig.Get("driver.chuanglan.url"),
 	}
 
 	formUI.SetData(data)
@@ -239,17 +230,6 @@ func settingForm(ctx echo.Context) *form.Form {
 			return err
 		}
 
-		messageConfig.Set("tpl.code", data["message.tpl.code"])
-		messageConfig.Set("code.expired", cast.ToInt(data["message.code.expired"]))
-		messageConfig.Set("code.retry", cast.ToInt(data["message.code.retry"]))
-		messageConfig.Set("driver.type", data["message.driver.type"])
-		messageConfig.Set("driver.chuanglan.account", data["message.driver.chuanglan.account"])
-		messageConfig.Set("driver.chuanglan.password", data["message.driver.chuanglan.password"])
-		messageConfig.Set("driver.chuanglan.url", data["message.driver.chuanglan.url"])
-		err = messageConfig.WriteConfig()
-		if err != nil {
-			return err
-		}
 		syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		return nil
 	})

@@ -8,6 +8,7 @@ import (
 	"github.com/duxphp/duxgo-admin/system/service"
 	"github.com/duxphp/duxgo-admin/system/task"
 	"github.com/duxphp/duxgo-admin/system/websocket"
+	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/duxphp/duxgo/core"
 	coreMiddleware "github.com/duxphp/duxgo/middleware"
 	coreRegister "github.com/duxphp/duxgo/register"
@@ -89,11 +90,11 @@ func Queue(queue *asynq.ServeMux) {
 
 func Scheduler(scheduler *asynq.Scheduler) {
 	// 服务器监控
-	if core.Config["app"].GetBool("logger.service.status") {
+	if coreConfig.Get("app").GetBool("logger.service.status") {
 		coreTask.RegScheduler("*/1 * * * *", "system.control", map[string]any{}, coreTask.PRIORITY_LOW)
 	}
 	// 保存访客日志
-	if core.Config["app"].GetBool("logger.request.status") {
+	if coreConfig.Get("app").GetBool("logger.request.status") {
 		coreTask.RegScheduler("*/30 * * * *", "system.visitor", map[string]any{}, coreTask.PRIORITY_LOW)
 	}
 }
