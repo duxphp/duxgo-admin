@@ -12,7 +12,7 @@ import (
 //go:embed */views/*
 var ViewsFs embed.FS
 
-func New(t *bootstrap.Bootstrap) {
+func New() {
 	template.Must(core.Tpl.ParseFS(ViewsFs, "app/*/views/*"))
 	tools.App()
 	system.App()
