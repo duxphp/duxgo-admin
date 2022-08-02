@@ -2,10 +2,7 @@ package middleware
 
 import (
 	"fmt"
-	duxUI "github.com/duxphp/duxgo-ui"
-	"github.com/duxphp/duxgo/core"
 	"github.com/labstack/echo/v4"
-	"github.com/spf13/cast"
 	"net/http"
 	"strings"
 )
@@ -34,26 +31,26 @@ func AdminViewHandler(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		if !wantsJson(c) {
-			css := duxUI.ConfigManifest["css"].([]any)
+			//css := duxUI.ConfigManifest["css"].([]any)
 			params := ui{
-				Css:  "/" + cast.ToString(css[0]),
-				Js:   "/" + cast.ToString(duxUI.ConfigManifest["file"]),
-				Name: core.Config["info"].GetString("info.name"),
-				Logo: "/images/logo.svg",
-				Login: login{
-					Logo:    "/images/logo.svg",
-					Title:   core.Config["info"].GetString("info.name"),
-					Name:    "系统登录",
-					Desc:    core.Config["info"].GetString("info.description"),
-					Contact: core.Config["info"].GetString("info.copyright"),
-					Side: []string{
-						"/images/login-side.png",
-					},
-					Foot: "/images/login-foot.png",
-				},
-				Socket: map[string]string{
-					"api": "/admin/ws",
-				},
+				//Css:  "/" + cast.ToString(css[0]),
+				//Js:   "/" + cast.ToString(duxUI.ConfigManifest["file"]),
+				//Name: core.Config["info"].GetString("info.name"),
+				//Logo: "/images/logo.svg",
+				//Login: login{
+				//	Logo:    "/images/logo.svg",
+				//	Title:   core.Config["info"].GetString("info.name"),
+				//	Name:    "系统登录",
+				//	Desc:    core.Config["info"].GetString("info.description"),
+				//	Contact: core.Config["info"].GetString("info.copyright"),
+				//	Side: []string{
+				//		"/images/login-side.png",
+				//	},
+				//	Foot: "/images/login-foot.png",
+				//},
+				//Socket: map[string]string{
+				//	"api": "/admin/ws",
+				//},
 			}
 
 			fmt.Println("渲染页面")
