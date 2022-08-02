@@ -33,7 +33,6 @@ type ui struct {
 func AdminViewHandler(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
-		fmt.Println(duxUI.ConfigManifest)
 		if !wantsJson(c) {
 			css := duxUI.ConfigManifest["css"].([]any)
 			params := ui{
@@ -56,6 +55,8 @@ func AdminViewHandler(next echo.HandlerFunc) echo.HandlerFunc {
 					"api": "/admin/ws",
 				},
 			}
+
+			fmt.Println("渲染页面")
 			return c.Render(http.StatusOK, "admin.gohtml", params)
 		}
 		return next(c)
