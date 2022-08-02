@@ -1,13 +1,17 @@
 package admin
 
 import (
+	"fmt"
+	"github.com/duxphp/duxgo-admin/system/service"
 	"github.com/duxphp/duxgo/response"
 	"github.com/labstack/echo/v4"
 )
 
 func Control(ctx echo.Context) error {
-	//info := service.GetMonitorInfo()
+	info := service.GetMonitorInfo()
 	assign := map[string]any{}
+
+	fmt.Println(info)
 
 	assign["info"] = []map[string]any{
 		//{
