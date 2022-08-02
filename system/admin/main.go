@@ -13,9 +13,9 @@ import (
 	"github.com/golang-module/carbon/v2"
 	"github.com/labstack/echo/v4"
 	"github.com/mitchellh/mapstructure"
+	"github.com/samber/lo"
 	"github.com/spf13/cast"
 	"os"
-	"regexp"
 	"runtime"
 	"strconv"
 	"syscall"
@@ -120,30 +120,30 @@ func Main(ctx echo.Context) error {
 	}
 	assign["operate"] = CoverData(operateData)
 
-	operateMaps := []map[string]any{}
-	err = mapstructure.Decode(operateData, &operateMaps)
-	if err != nil {
-		return err
-	}
-	operateChart := chart.New("date").Legend(true, "right", "top").Column().Date(startTime, carbon.Now().ToDateString(), "day", "01-02")
-	operateChart.Data("日志量", operateMaps)
-	assign["operateChart"] = operateChart.Render()
-
-	sqlVersion := []map[string]any{}
-	core.Db.Raw(`SHOW VARIABLES LIKE "version"`).Scan(&sqlVersion)
-
-	redisInfo, _ := core.Redis.Info(core.Ctx).Result()
-
-	myRegex, _ := regexp.Compile(`redis_version:(.*)`)
-	found := myRegex.FindStringSubmatch(redisInfo)
-	redisVer := found[1]
-	assign["ver"] = map[string]any{
-		"go":   runtime.Version(),
-		"echo": echo.Version,
-		"dux":  core.Version,
-		//"mysql": sqlVersion[0]["Value"],
-		"redis": redisVer,
-	}
+	//operateMaps := []map[string]any{}
+	//err = mapstructure.Decode(operateData, &operateMaps)
+	//if err != nil {
+	//	return err
+	//}
+	//operateChart := chart.New("date").Legend(true, "right", "top").Column().Date(startTime, carbon.Now().ToDateString(), "day", "01-02")
+	//operateChart.Data("日志量", operateMaps)
+	//assign["operateChart"] = operateChart.Render()
+	//
+	//sqlVersion := []map[string]any{}
+	//core.Db.Raw(`SHOW VARIABLES LIKE "version"`).Scan(&sqlVersion)
+	//
+	//redisInfo, _ := core.Redis.Info(core.Ctx).Result()
+	//
+	//myRegex, _ := regexp.Compile(`redis_version:(.*)`)
+	//found := myRegex.FindStringSubmatch(redisInfo)
+	//redisVer := found[1]
+	//assign["ver"] = map[string]any{
+	//	"go":    runtime.Version(),
+	//	"echo":  echo.Version,
+	//	"dux":   core.Version,
+	//	"mysql": sqlVersion[0]["Value"],
+	//	"redis": redisVer,
+	//}
 
 	client := resty.New().SetTimeout(2 * time.Second).R()
 	resp, _ := client.Get("http://ip.dhcp.cn/?ip")
@@ -182,29 +182,29 @@ func CoverData(data []*statsData) map[string]any {
 
 	var dataTmpDay float64
 	var dataTmpRate int
-	//var dataTmpBefore float64
-	//var dataTmpSum float64
+	var dataTmpBefore float64
+	var dataTmpSum float64
 	var dataTmpTrend = 1
 
-	//if len(data) >= 1 {
-	//	dataTmpLast := data[len(data)-1]
-	//	dataTmpDay = dataTmpLast.Value
-	//	for _, datum := range data {
-	//		dataTmpSum += datum.Value
-	//	}
-	//}
-	//
-	//if len(data) >= 2 {
-	//	dataTmpBefore = data[len(data)-2].Value
-	//}
-	//dataTmpRate = lo.Ternary[int](dataTmpSum > 0, cast.ToInt(dataTmpDay/dataTmpSum*100), 0)
-	//
-	//if dataTmpBefore < dataTmpDay {
-	//	dataTmpTrend = 2
-	//}
-	//if dataTmpBefore > dataTmpDay {
-	//	dataTmpTrend = 0
-	//}
+	if len(data) >= 1 {
+		dataTmpLast := data[len(data)-1]
+		dataTmpDay = dataTmpLast.Value
+		for _, datum := range data {
+			dataTmpSum += datum.Value
+		}
+	}
+
+	if len(data) >= 2 {
+		dataTmpBefore = data[len(data)-2].Value
+	}
+	dataTmpRate = lo.Ternary[int](dataTmpSum > 0, cast.ToInt(dataTmpDay/dataTmpSum*100), 0)
+
+	if dataTmpBefore < dataTmpDay {
+		dataTmpTrend = 2
+	}
+	if dataTmpBefore > dataTmpDay {
+		dataTmpTrend = 0
+	}
 	return map[string]any{
 		"day":   dataTmpDay,
 		"rate":  dataTmpRate,
