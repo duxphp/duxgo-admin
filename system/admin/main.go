@@ -139,10 +139,10 @@ func Main(ctx echo.Context) error {
 	found := myRegex.FindStringSubmatch(redisInfo)
 	redisVer := found[1]
 	assign["ver"] = map[string]any{
-		"go":    runtime.Version(),
-		"echo":  echo.Version,
-		"dux":   core.Version,
-		"mysql": sqlVersion[0]["Value"],
+		"go":   runtime.Version(),
+		"echo": echo.Version,
+		"dux":  core.Version,
+		//"mysql": sqlVersion[0]["Value"],
 		"redis": redisVer,
 	}
 
