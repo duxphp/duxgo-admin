@@ -3,6 +3,7 @@ package service
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"github.com/dustin/go-humanize"
 	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/duxphp/duxgo/core"
@@ -30,16 +31,24 @@ type MonitorInfo struct {
 
 // GetMonitorInfo 获取监控信息
 func GetMonitorInfo() *MonitorInfo {
+	fmt.Println(1)
 	data := MonitorInfo{}
+	fmt.Println(2)
 	data.LogSize = getDirSize("/logs")
 	data.LogSizeF = humanize.Bytes(data.LogSize)
+	fmt.Println(3)
 	data.UploadSize = getDirSize("/uploads")
 	data.UploadSizeF = humanize.Bytes(data.UploadSize)
+	fmt.Println(4)
 	data.TmpSize = getDirSize("/tmp")
 	data.TmpSizeF = humanize.Bytes(data.TmpSize)
+	fmt.Println(5)
 	data.BootTime = core.BootTime.Format("2006-01-02 15:04:05")
+	fmt.Println(6)
 	sysInfo, _ := host.Info()
+	fmt.Println(7)
 	data.OsName = sysInfo.Platform + " " + sysInfo.PlatformVersion
+	fmt.Println(8)
 	return &data
 
 }
