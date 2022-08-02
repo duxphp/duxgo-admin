@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	duxUI "github.com/duxphp/duxgo-ui"
 	"github.com/duxphp/duxgo/core"
 	"github.com/labstack/echo/v4"
@@ -31,6 +32,8 @@ type ui struct {
 
 func AdminViewHandler(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+
+		fmt.Println(duxUI.ConfigManifest)
 		if !wantsJson(c) {
 			css := duxUI.ConfigManifest["css"].([]any)
 			params := ui{
