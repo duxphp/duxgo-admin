@@ -6,12 +6,16 @@ import (
 	"github.com/duxphp/duxgo-ui/lib/table"
 	"github.com/duxphp/duxgo-ui/lib/table/column"
 	"github.com/duxphp/duxgo/core"
+	"github.com/duxphp/duxgo/exception"
 	"github.com/hibiken/asynq"
 	"github.com/jianfengye/collection"
 	"github.com/labstack/echo/v4"
 )
 
 func QueueList(ctx echo.Context) error {
+	if core.QueueInspector == nil {
+		return exception.BusinessError("队列服务未开启，暂时无法使用")
+	}
 	return service.NewManageExpand().SetTable(queueTable).ListPage(ctx)
 }
 

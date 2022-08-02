@@ -2,6 +2,7 @@ package admin
 
 import (
 	"github.com/duxphp/duxgo/core"
+	"github.com/duxphp/duxgo/exception"
 	"github.com/duxphp/duxgo/pkg/chart"
 	"github.com/duxphp/duxgo/response"
 	"github.com/duxphp/duxgo/util/function"
@@ -10,6 +11,10 @@ import (
 )
 
 func QueueMain(ctx echo.Context) error {
+
+	if core.QueueInspector == nil {
+		return exception.BusinessError("队列服务未开启，暂时无法使用")
+	}
 
 	var data []map[string]any
 	queueCharts := chart.New("custom").Legend(true, "right", "top").Column(true)
