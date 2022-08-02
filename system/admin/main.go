@@ -120,14 +120,14 @@ func Main(ctx echo.Context) error {
 	}
 	assign["operate"] = CoverData(operateData)
 
-	//operateMaps := []map[string]any{}
-	//err = mapstructure.Decode(operateData, &operateMaps)
-	//if err != nil {
-	//	return err
-	//}
-	//operateChart := chart.New("date").Legend(true, "right", "top").Column().Date(startTime, carbon.Now().ToDateString(), "day", "01-02")
-	//operateChart.Data("日志量", operateMaps)
-	//assign["operateChart"] = operateChart.Render()
+	operateMaps := []map[string]any{}
+	err = mapstructure.Decode(operateData, &operateMaps)
+	if err != nil {
+		return err
+	}
+	operateChart := chart.New("date").Legend(true, "right", "top").Column().Date(startTime, carbon.Now().ToDateString(), "day", "01-02")
+	operateChart.Data("日志量", operateMaps)
+	assign["operateChart"] = operateChart.Render()
 	//
 	//sqlVersion := []map[string]any{}
 	//core.Db.Raw(`SHOW VARIABLES LIKE "version"`).Scan(&sqlVersion)
