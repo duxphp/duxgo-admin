@@ -84,7 +84,7 @@ func GetMonitorLog() []map[string]any {
 func getDirSize(path string) uint64 {
 	var size int64
 	wd, _ := os.Getwd()
-	if !function.IsExist(path) {
+	if !function.IsExist(wd + path) {
 		return 0
 	}
 	filepath.Walk(wd+path, func(_ string, info os.FileInfo, err error) error {
