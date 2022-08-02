@@ -13,7 +13,6 @@ import (
 	"github.com/golang-module/carbon/v2"
 	"github.com/labstack/echo/v4"
 	"github.com/mitchellh/mapstructure"
-	"github.com/samber/lo"
 	"github.com/spf13/cast"
 	"os"
 	"regexp"
@@ -183,29 +182,29 @@ func CoverData(data []*statsData) map[string]any {
 
 	var dataTmpDay float64
 	var dataTmpRate int
-	var dataTmpBefore float64
-	var dataTmpSum float64
+	//var dataTmpBefore float64
+	//var dataTmpSum float64
 	var dataTmpTrend = 1
 
-	if len(data) >= 1 {
-		dataTmpLast := data[len(data)-1]
-		dataTmpDay = dataTmpLast.Value
-		for _, datum := range data {
-			dataTmpSum += datum.Value
-		}
-	}
-
-	if len(data) >= 2 {
-		dataTmpBefore = data[len(data)-2].Value
-	}
-	dataTmpRate = lo.Ternary[int](dataTmpSum > 0, cast.ToInt(dataTmpDay/dataTmpSum*100), 0)
-
-	if dataTmpBefore < dataTmpDay {
-		dataTmpTrend = 2
-	}
-	if dataTmpBefore > dataTmpDay {
-		dataTmpTrend = 0
-	}
+	//if len(data) >= 1 {
+	//	dataTmpLast := data[len(data)-1]
+	//	dataTmpDay = dataTmpLast.Value
+	//	for _, datum := range data {
+	//		dataTmpSum += datum.Value
+	//	}
+	//}
+	//
+	//if len(data) >= 2 {
+	//	dataTmpBefore = data[len(data)-2].Value
+	//}
+	//dataTmpRate = lo.Ternary[int](dataTmpSum > 0, cast.ToInt(dataTmpDay/dataTmpSum*100), 0)
+	//
+	//if dataTmpBefore < dataTmpDay {
+	//	dataTmpTrend = 2
+	//}
+	//if dataTmpBefore > dataTmpDay {
+	//	dataTmpTrend = 0
+	//}
 	return map[string]any{
 		"day":   dataTmpDay,
 		"rate":  dataTmpRate,
