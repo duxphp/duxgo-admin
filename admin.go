@@ -12,7 +12,7 @@ import (
 var ViewsFs embed.FS
 
 func New() {
-	template.Must(core.Tpl.ParseFS(ViewsFs, "app/*/views/*"))
+	template.Must(core.Tpl.ParseFS(ViewsFs, "*/views/*"))
 	tools.App()
 	system.App()
 }
