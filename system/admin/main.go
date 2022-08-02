@@ -37,7 +37,7 @@ func Main(ctx echo.Context) error {
 
 	// 访问量
 	var apiNumData []*statsData
-	err := core.Db.Model(&model.VisitorApi{}).Debug().Select(`SUM(pv) as value, DATE_FORMAT(date, "%Y-%m-%d") as label`).Where("date  >= ?", startTime).Group("date").Find(&apiNumData).Error
+	err := core.Db.Model(&model.VisitorApi{}).Select(`SUM(pv) as value, DATE_FORMAT(date, "%Y-%m-%d") as label`).Where("date  >= ?", startTime).Group("date").Find(&apiNumData).Error
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func Main(ctx echo.Context) error {
 	}
 
 	var apiTimeData []*timeData
-	err = core.Db.Model(&model.VisitorApi{}).Debug().Select(`MAX(max_time) as max, MAX(min_time) as min, DATE_FORMAT(date, "%Y-%m-%d") as label`).Where("date  >= ?", startTime).Group("date").Find(&apiTimeData).Error
+	err = core.Db.Model(&model.VisitorApi{}).Select(`MAX(max_time) as max, MAX(min_time) as min, DATE_FORMAT(date, "%Y-%m-%d") as label`).Where("date  >= ?", startTime).Group("date").Find(&apiTimeData).Error
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,7 @@ func Main(ctx echo.Context) error {
 
 	// 文件统计
 	var fileNumData []*statsData
-	err = core.Db.Model(&toolsModel.ToolFile{}).Debug().Select(`COUNT(*) as value, DATE_FORMAT(created_at, "%Y-%m-%d") as label`).Where("created_at  >= ?", startTime).Group(`DATE_FORMAT(created_at,"%Y-%m-%d")`).Find(&fileNumData).Error
+	err = core.Db.Model(&toolsModel.ToolFile{}).Select(`COUNT(*) as value, DATE_FORMAT(created_at, "%Y-%m-%d") as label`).Where("created_at  >= ?", startTime).Group(`DATE_FORMAT(created_at,"%Y-%m-%d")`).Find(&fileNumData).Error
 	if err != nil {
 		return err
 	}
