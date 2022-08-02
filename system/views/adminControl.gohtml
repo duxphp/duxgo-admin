@@ -1,0 +1,370 @@
+<template>
+    <app-layout>
+
+        <div class="p-5">
+            <div class=" flex  flex-wrap gap-2 mb-4">
+                ${range .info}
+                <div class=" bg-white dark:bg-blackgray-4 rounded-sm shadow-sm flex ">
+                    <div class="p-2 px-4 bg-${.color}-600 text-gray-200 rounded-l-sm whitespace-nowrap">${.name}</div>
+                    <div class="py-2 px-4 whitespace-nowrap">${.value}</div>
+                </div>
+                ${end}
+
+                <div class=" bg-white dark:bg-blackgray-4 rounded-sm shadow-sm flex ">
+                    <div class="p-2 px-4 bg-green-600 text-gray-200 rounded-l-sm whitespace-nowrap">线程量</div>
+                    <div class="py-2 px-4 whitespace-nowrap">{{ThreadCount}}</div>
+                </div>
+
+                <div class=" bg-white dark:bg-blackgray-4 rounded-sm shadow-sm flex ">
+                    <div class="p-2 px-4 bg-orange-600 text-gray-200 rounded-l-sm whitespace-nowrap">协程量</div>
+                    <div class="py-2 px-4 whitespace-nowrap">{{GoroutineCount}}</div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div class="p-4 pb-0 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                    <div class="mt-0.5 text-base mb-2">系统使用率</div>
+                    <div class=" grid grid-cols-2 gap-2">
+                        <div>
+                            <div class="flex items-center justify-center">
+                                <apexchart type="radialBar" width="270" height="270" :options="cpuOptions"
+                                           :series="cpuRate"></apexchart>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-center">
+                                <apexchart type="radialBar" width="270" height="270" :options="memOptions"
+                                           :series="memRate"></apexchart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                    <div class="mt-0.5 text-base mb-2">目录使用量</div>
+                    <div>
+                        <a-table :data="diskData" :scroll="{y: '240px', x: '100%'}" :pagination="false"
+                                 :bordered="false">
+                            <template #columns>
+                                <a-table-column title="名称" data-index="name" width="100"></a-table-column>
+                                <a-table-column title="目录" data-index="dir" width="200"></a-table-column>
+                                <a-table-column title="使用空间" data-index="size_str" width="100"></a-table-column>
+                            </template>
+                        </a-table>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 text-base mb-2">CPU使用率</div>
+                        <div>
+                            <apexchart type="area" ref="chart" height="300" :options="rateOptions"
+                                       :series="cpuSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 text-base mb-2">内存使用率</div>
+                        <div id="chart-timeline">
+                            <apexchart type="area" ref="chart" height="300" :options="rateOptions"
+                                       :series="memSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 text-base mb-2">线程使用量</div>
+                        <div id="chart-timeline">
+                            <apexchart type="area" ref="chart" height="300" :options="areaOptions"
+                                       :series="threadSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 text-base mb-2">协程使用量</div>
+                        <div id="chart-timeline">
+                            <apexchart type="area" ref="chart" height="300" :options="areaOptions"
+                                       :series="goroutineSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </app-layout>
+</template>
+<script>
+    export default {
+        data: function () {
+            return {
+                // 图表
+                cpuOptions: {
+                    chart: {
+                        height: 300,
+                        type: 'radialBar',
+                        offsetY: -10
+                    },
+                    plotOptions: {
+                        radialBar: {
+                            startAngle: -135,
+                            endAngle: 135,
+                            dataLabels: {
+                                name: {
+                                    fontSize: '16px',
+                                    color: undefined,
+                                    offsetY: 80
+                                },
+                                value: {
+                                    offsetY: 36,
+                                    fontSize: '18px',
+                                    color: undefined,
+                                    formatter: function (val) {
+                                        return val + "%";
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shade: 'dark',
+                            shadeIntensity: 0.15,
+                            inverseColors: false,
+                            opacityFrom: 1,
+                            opacityTo: 1,
+                            stops: [0, 50, 65, 91]
+                        },
+                    },
+                    stroke: {
+                        dashArray: 4
+                    },
+                    labels: ['CPU 占用率'],
+                },
+
+                memOptions: {
+                    chart: {
+                        height: 300,
+                        type: 'radialBar',
+                        offsetY: -10
+                    },
+                    plotOptions: {
+                        radialBar: {
+                            startAngle: -135,
+                            endAngle: 135,
+                            dataLabels: {
+                                name: {
+                                    fontSize: '16px',
+                                    color: undefined,
+                                    offsetY: 80
+                                },
+                                value: {
+                                    offsetY: 36,
+                                    fontSize: '18px',
+                                    color: undefined,
+                                    formatter: function (val) {
+                                        return val + "%";
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shade: 'dark',
+                            shadeIntensity: 0.15,
+                            inverseColors: false,
+                            opacityFrom: 1,
+                            opacityTo: 1,
+                            stops: [0, 50, 65, 91]
+                        },
+                    },
+                    stroke: {
+                        dashArray: 4
+                    },
+                    labels: ['内存占用率'],
+                },
+                rateOptions: {
+                    chart: {
+                        type: 'area',
+                        zoom: {
+                            autoScaleYaxis: true
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    annotations: {
+                        yaxis: [{
+                            y: 80,
+                            borderColor: 'red',
+                            label: {
+                                show: true,
+                                text: 'high',
+                                style: {
+                                    color: "#fff",
+                                    background: 'red'
+                                }
+                            }
+                        }],
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    markers: {
+                        size: 0,
+                        style: 'hollow',
+                    },
+                    xaxis: {
+                        type: 'datetime',
+                        tickAmount: 6,
+                        min: new Date().getTime(),
+                        labels: {
+                            datetimeUTC: false,
+                        }
+                    },
+                    yaxis: {
+                        min: 0,
+                        max: 100,
+                    },
+                    tooltip: {
+                        x: {
+                            format: 'HH mm'
+                        },
+                        y: {
+                            formatter: function (val) {
+                                return val + " %"
+                            }
+                        }
+                    },
+                },
+
+                areaOptions: {
+                    chart: {
+                        type: 'area',
+                        zoom: {
+                            autoScaleYaxis: true
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    annotations: {
+                        yaxis: [{
+                            y: 80,
+                            borderColor: 'red',
+                            label: {
+                                show: true,
+                                text: 'high',
+                                style: {
+                                    color: "#fff",
+                                    background: 'red'
+                                }
+                            }
+                        }],
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    markers: {
+                        size: 0,
+                        style: 'hollow',
+                    },
+                    xaxis: {
+                        type: 'datetime',
+                        tickAmount: 6,
+                        min: new Date().getTime(),
+                        labels: {
+                            datetimeUTC: false,
+                        }
+                    },
+                    tooltip: {
+                        x: {
+                            format: 'HH mm'
+                        },
+                    },
+                },
+
+                // 数据
+                getStatus: true,
+                diskData: ${marshal .dir},
+                cpuRate: [],
+                memRate: [],
+                cpuSeries: [
+                    {
+                        name: "占用率",
+                        data: [],
+                    },
+                ],
+                memSeries: [
+                    {
+                        name: "占用率",
+                        data: [],
+                    },
+                ],
+                threadSeries: [
+                    {
+                        name: "线程量",
+                        data: [],
+                    },
+                ],
+                goroutineSeries: [
+                    {
+                        name: "协程量",
+                        data: [],
+                    },
+                ],
+
+                ThreadCount :0,
+                GoroutineCount: 0,
+
+            }
+        },
+        mounted() {
+            this.initWebSocket()
+        },
+        unmounted() {
+            this.getStatus = false
+            this.socket.destroy()
+            this.reconn.destroy()
+        },
+        methods: {
+            initWebSocket() {
+                this.socket = window.dux.socket.type('control')
+                this.socket.sendMessage()
+                this.socket.on(info => {
+                    let res = info.data
+                    // 接收
+                    this.cpuRate[0] = res.CpuPercent
+                    this.memRate[0] = res.MemPercent
+                    this.ThreadCount = res.ThreadCount
+                    this.GoroutineCount = res.GoroutineCount
+                    this.cpuSeries[0].data.push([res.Timestamp, res.CpuPercent])
+                    this.memSeries[0].data.push([res.Timestamp, res.MemPercent])
+                    this.threadSeries[0].data.push([res.Timestamp, res.ThreadCount])
+                    this.goroutineSeries[0].data.push([res.Timestamp, res.GoroutineCount])
+                    // 轮询
+                    if (this.getStatus) {
+                        setTimeout(() => {
+                            this.socket.sendMessage()
+                        }, 3000)
+                    }
+                })
+                this.reconn = window.dux.socket.onReconnect(status => {
+                    if (status) {
+                        this.socket.sendMessage()
+                    }
+                })
+
+            },
+
+        },
+        render() {
+
+        }
+    }
+</script>

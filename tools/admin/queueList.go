@@ -1,0 +1,99 @@
+package admin
+
+import (
+	"github.com/duxphp/duxgo-admin/system/service"
+	"github.com/duxphp/duxgo-ui/lib/form"
+	"github.com/duxphp/duxgo-ui/lib/table"
+	"github.com/duxphp/duxgo-ui/lib/table/column"
+	"github.com/duxphp/duxgo/core"
+	"github.com/hibiken/asynq"
+	"github.com/jianfengye/collection"
+	"github.com/labstack/echo/v4"
+)
+
+func QueueList(ctx echo.Context) error {
+	return service.NewManageExpand().SetTable(queueTable).ListPage(ctx)
+}
+
+func QueueAjax(ctx echo.Context) error {
+	return service.NewManageExpand().SetTable(queueTable).ListData(ctx)
+}
+
+func queueTable(ctx echo.Context) *table.Table {
+	table := table.NewTable()
+
+	table.SetUrl("/admin/tools/queueList/ajax")
+
+	table.AddTab("处理中")
+	table.AddTab("待处理")
+	table.AddTab("定时任务")
+	table.AddTab("重试任务")
+	table.AddTab("存档任务")
+
+	queueList, _ := core.QueueInspector.Queues()
+	options := map[any]any{}
+	for _, name := range queueList {
+		options[name] = name
+	}
+	table.AddFilter("队列类型", "queue").SetUI(form.NewSelect().SetOptions(options)).SetQuick(true).SetDefault("default")
+
+	table.SetDataFun(func(filter map[string]any) (collect collection.ICollection) {
+		qname := filter["queue"].(string)
+		var tasks []*asynq.TaskInfo
+		if filter["tab"] == 0 {
+			tasks, _ = core.QueueInspector.ListActiveTasks(qname)
+		}
+		if filter["tab"] == 1 {
+			tasks, _ = core.QueueInspector.ListPendingTasks(qname)
+		}
+		if filter["tab"] == 2 {
+			tasks, _ = core.QueueInspector.ListScheduledTasks(qname)
+		}
+		if filter["tab"] == 3 {
+			tasks, _ = core.QueueInspector.ListRetryTasks(qname)
+		}
+		if filter["tab"] == 4 {
+			tasks, _ = core.QueueInspector.ListArchivedTasks(qname)
+		}
+
+		type taskI struct {
+			Id      string
+			Type    string
+			Payload string
+			Time    string
+		}
+
+		var data []taskI
+		var date string
+
+		for _, task := range tasks {
+			if !task.NextProcessAt.IsZero() {
+				date = task.NextProcessAt.Format("2006-01-02 15:04:05")
+			}
+			if !task.CompletedAt.IsZero() {
+				date = task.CompletedAt.Format("2006-01-02 15:04:05")
+			}
+			if date == "" {
+				date = "-"
+			}
+			data = append(data, taskI{
+				Id:      task.ID,
+				Type:    task.Type,
+				Payload: string(task.Payload),
+				Time:    date,
+			})
+		}
+
+		return collection.NewObjCollection(data)
+	}, "id")
+
+	table.AddCol("ID", "FamilyId").SetUI(column.NewContext())
+	table.AddCol("类型", "Type").SetUI(column.NewContext())
+	table.AddCol("参数", "Payload").SetUI(column.NewContext())
+
+	table.AddCol("时间", "Time").SetUI(column.NewContext()).SetWidth(220)
+
+	// 排序规则
+
+	return table
+}

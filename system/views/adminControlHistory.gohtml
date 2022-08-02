@@ -1,0 +1,269 @@
+<template>
+    <app-layout>
+
+        <div class="p-5">
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 mb-2 flex items-center">
+                            <div class=" text-base flex-grow">
+                                CPU使用率
+                            </div>
+                            <div class="flex-none">
+                                <a-radio-group  default-value="1" type="button" @change="updateTime('cpu', $event)">
+                                    <a-radio value="1">今天</a-radio>
+                                    <a-radio value="7">7天</a-radio>
+                                    <a-radio value="30">30天</a-radio>
+                                </a-radio-group>
+                            </div>
+                        </div>
+                        <div>
+                            <apexchart type="line" height="300" ref="cpuChart" :options="rateOptions"
+                                       :series="cpuSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 mb-2 flex items-center">
+                            <div class=" text-base flex-grow">
+                                内存占用率
+                            </div>
+                            <div class="flex-none">
+                                <a-radio-group  default-value="1" type="button" @change="updateTime('mem',$event)">
+                                    <a-radio value="1">今天</a-radio>
+                                    <a-radio value="7">7天</a-radio>
+                                    <a-radio value="30">30天</a-radio>
+                                </a-radio-group>
+                            </div>
+                        </div>
+                        <div>
+                            <apexchart type="area" height="300" ref="memChart" :options="rateOptions"
+                                       :series="memSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 mb-2 flex items-center">
+                            <div class=" text-base flex-grow">
+                                线程使用量
+                            </div>
+                            <div class="flex-none">
+                                <a-radio-group  default-value="1" type="button" @change="updateTime('thread',$event)">
+                                    <a-radio value="1">今天</a-radio>
+                                    <a-radio value="7">7天</a-radio>
+                                    <a-radio value="30">30天</a-radio>
+                                </a-radio-group>
+                            </div>
+                        </div>
+                        <div>
+                            <apexchart type="area" height="300" ref="threadChart" :options="areaOptions"
+                                       :series="threadSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="p-4 bg-white dark:bg-blackgray-4 rounded-sm shadow-sm">
+                        <div class="mt-0.5 mb-2 flex items-center">
+                            <div class=" text-base flex-grow">
+                                协程使用量
+                            </div>
+                            <div class="flex-none">
+                                <a-radio-group  default-value="1" type="button" @change="updateTime('goroutine',$event)">
+                                    <a-radio value="1">今天</a-radio>
+                                    <a-radio value="7">7天</a-radio>
+                                    <a-radio value="30">30天</a-radio>
+                                </a-radio-group>
+                            </div>
+                        </div>
+                        <div>
+                            <apexchart type="area" height="300" ref="goroutineChart" :options="areaOptions"
+                                       :series="goroutineSeries"></apexchart>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </app-layout>
+</template>
+<script>
+    let miniDate = new Date(new Date().setHours(0, 0, 0, 0))
+
+    export default {
+        data: function () {
+            return {
+                rateOptions: {
+                    chart: {
+                        type: 'line',
+                        zoom: {
+                            autoScaleYaxis: true
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    annotations: {
+                        yaxis: [{
+                            y: 80,
+                            borderColor: 'red',
+                            label: {
+                                show: true,
+                                text: 'high',
+                                style: {
+                                    color: "#fff",
+                                    background: 'red'
+                                }
+                            }
+                        }],
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    xaxis: {
+                        min: miniDate.getTime(),
+                        type: 'datetime',
+                        tickAmount: 6,
+                        labels: {
+                            datetimeUTC: false,
+                        }
+                    },
+                    yaxis: {
+                        min: 0,
+                        max: 100,
+                    },
+                    tooltip: {
+                        x: {
+                            format: 'HH mm'
+                        },
+                        y: {
+                            formatter: function (val) {
+                                return val + " %"
+                            }
+                        }
+                    },
+                },
+
+                areaOptions: {
+                    chart: {
+                        type: 'area',
+                        zoom: {
+                            autoScaleYaxis: true
+                        },
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    annotations: {
+                        yaxis: [{
+                            y: 80,
+                            borderColor: 'red',
+                            label: {
+                                show: true,
+                                text: 'high',
+                                style: {
+                                    color: "#fff",
+                                    background: 'red'
+                                }
+                            }
+                        }],
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    markers: {
+                        size: 0,
+                        style: 'hollow',
+                    },
+                    xaxis: {
+                        type: 'datetime',
+                        tickAmount: 6,
+                        min: miniDate.getTime(),
+                        labels: {
+                            datetimeUTC: false,
+                        }
+                    },
+                    tooltip: {
+                        x: {
+                            format: 'HH mm'
+                        },
+                    },
+                },
+
+                getStatus: true,
+                cpuSeries: [
+                    {
+                        name: "占用率",
+                        data: [],
+                    },
+                ],
+                memSeries: [
+                    {
+                        name: "占用率",
+                        data: [],
+                    },
+                ],
+                threadSeries: [
+                    {
+                        name: "线程量",
+                        data: [],
+                    },
+                ],
+                goroutineSeries: [
+                    {
+                        name: "协程量",
+                        data: [],
+                    },
+                ],
+            }
+        },
+        mounted() {
+            this.initWebSocket()
+        },
+        unmounted() {
+            this.getStatus = false
+            this.socket.destroy()
+            this.reconn.destroy()
+        },
+        methods: {
+            updateTime(type, value) {
+                let startDate
+                if (value == 1) {
+                    startDate = miniDate
+                }else {
+                    startDate = new Date()
+                    startDate.setDate(startDate.getDate() - value)
+                    startDate.setHours(0, 0, 0, 0)
+                }
+                if (!value) {
+                    this.$refs[type + "Chart"].resetSeries()
+                }else {
+                    this.$refs[type + "Chart"].zoomX(
+                        startDate.getTime(),
+                        new Date().getTime()
+                    )
+                }
+            },
+            initWebSocket() {
+                this.socket = window.dux.socket.type('controlLog')
+                this.socket.sendMessage()
+                this.socket.on(info => {
+                    let data = info.data
+                    data.forEach(item => {
+                        this.cpuSeries[0].data.push([item.Timestamp, item.CpuPercent])
+                        this.memSeries[0].data.push([item.Timestamp, item.MemPercent])
+                        this.threadSeries[0].data.push([item.Timestamp, item.ThreadCount])
+                        this.goroutineSeries[0].data.push([item.Timestamp, item.GoroutineCount])
+                    })
+                })
+            },
+
+        },
+        render() {
+
+        }
+    }
+</script>
