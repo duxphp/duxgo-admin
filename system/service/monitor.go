@@ -38,6 +38,7 @@ func GetMonitorInfo() *MonitorInfo {
 	data.LogSizeF = humanize.Bytes(data.LogSize)
 	fmt.Println(3)
 	data.UploadSize = getDirSize("/uploads")
+	fmt.Println(data.UploadSize)
 	data.UploadSizeF = humanize.Bytes(data.UploadSize)
 	fmt.Println(4)
 	data.TmpSize = getDirSize("/tmp")
