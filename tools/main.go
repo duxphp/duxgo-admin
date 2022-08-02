@@ -24,7 +24,7 @@ func App() {
 
 func Model() {
 	var err error
-	dirStatus := core.Db.Migrator().HasTable(model.ToolFileDir{})
+	dirStatus := core.Db.Migrator().HasTable("app_tools_file_dir")
 	err = core.Db.AutoMigrate(&model.ToolFileDir{}, &model.ToolFile{}, &model.ToolDistrict{})
 	if err != nil {
 		panic("model migrate error：" + err.Error())
