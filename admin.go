@@ -4,7 +4,6 @@ import (
 	"embed"
 	"github.com/duxphp/duxgo-admin/system"
 	"github.com/duxphp/duxgo-admin/tools"
-	"github.com/duxphp/duxgo/bootstrap"
 	"github.com/duxphp/duxgo/core"
 	"html/template"
 )
