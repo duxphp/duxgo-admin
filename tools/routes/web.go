@@ -1,6 +1,5 @@
 package routes
 
-import "C"
 import (
 	"github.com/duxphp/duxgo/util"
 	"github.com/labstack/echo/v4"
