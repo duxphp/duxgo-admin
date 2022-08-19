@@ -25,7 +25,7 @@ func getLumberjack(name string) *lumberjack.Logger {
 	return &lumberjack.Logger{
 		Filename:   path + "/" + name + ".log",
 		MaxSize:    1,
-		MaxBackups: 0,
+		MaxBackups: 5,
 		MaxAge:     30,
 		Compress:   true,
 	}
