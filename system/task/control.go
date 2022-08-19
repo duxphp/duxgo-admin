@@ -24,7 +24,7 @@ func getLumberjack(name string) *lumberjack.Logger {
 	path := coreConfig.Get("app").GetString("logger.service.path")
 	return &lumberjack.Logger{
 		Filename:   path + "/" + name + ".log",
-		MaxSize:    1024,
+		MaxSize:    1,
 		MaxBackups: 0,
 		MaxAge:     30,
 		Compress:   true,
