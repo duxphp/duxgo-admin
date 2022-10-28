@@ -116,6 +116,8 @@ github.com/duxphp/duxgo-ui v0.0.0-20220802030704-b7e7ac713625 h1:YbIaBtaklT9hA9c
 github.com/duxphp/duxgo-ui v0.0.0-20220802030704-b7e7ac713625/go.mod h1://90rF5UlQHVGqUsVatBZwOoMT356JCFhiqdioBjt7U=
 github.com/duxphp/duxgo-ui v0.0.0-20221028032444-c94fa37719ce h1:Fc6PVR83mA2cbSCZXnoCc0fC0nhNGDDINevXMxbaQAs=
 github.com/duxphp/duxgo-ui v0.0.0-20221028032444-c94fa37719ce/go.mod h1:CmfkWIbVpFRUCvVWupeu20jq8/WZqNFqI71XZoBZTg4=
+github.com/duxphp/duxgo-ui v0.0.0-20221028035212-ac6c61543cd9 h1:fV1veJH0hhsEZObSjvDQkEMI1IcSBXHsldvxNXNt/rA=
+github.com/duxphp/duxgo-ui v0.0.0-20221028035212-ac6c61543cd9/go.mod h1:CmfkWIbVpFRUCvVWupeu20jq8/WZqNFqI71XZoBZTg4=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
