@@ -78,7 +78,7 @@ func apiForm(ctx echo.Context) *form.Form {
 
 	formUI.AddField("接口名称", "name").SetUI(form.NewText()).SetMust(true)
 
-	formUI.SaveBefore(func(data map[string]any, update bool, db *gorm.DB) error {
+	formUI.SaveBefore(func(data map[string]any, postData map[string]any, update bool, db *gorm.DB) error {
 		if !update {
 			data["status"] = true
 			data["secretId"] = fmt.Sprintf("%06v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(100000000))
