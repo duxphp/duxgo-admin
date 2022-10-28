@@ -87,7 +87,7 @@ func apiForm(ctx echo.Context) *form.Form {
 		return nil
 	})
 
-	formUI.SaveAfter(func(data any, update bool) error {
+	formUI.SaveAfter(func(data map[string]any, info any, update bool, db *gorm.DB) error {
 		service.InitApi()
 		return nil
 	})
