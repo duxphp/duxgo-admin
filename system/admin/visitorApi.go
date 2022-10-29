@@ -11,7 +11,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
-	"time"
 )
 
 func VisitorApiList(ctx echo.Context) error {
@@ -45,7 +44,7 @@ func visitorApiTable(ctx echo.Context) *table.Table {
 	table.AddCol("最大延迟", "max_time").SetUI(column.NewContext()).SetSort()
 	table.AddCol("最小延迟", "min_time").SetUI(column.NewContext()).SetSort()
 	table.AddCol("日期", "date", func(val any, items map[string]any) any {
-		return carbon.Time2Carbon(val.(time.Time)).ToDateString()
+		return carbon.Parse(cast.ToString(val)).ToDateString()
 	}).SetUI(column.NewContext())
 
 	return table

@@ -14,7 +14,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
-	"time"
 )
 
 func VisitorOperateList(ctx echo.Context) error {
@@ -74,7 +73,7 @@ func visitorOperateTable(ctx echo.Context) *table.Table {
 	table.AddCol("路径", "url").SetUI(column.NewContext())
 	table.AddCol("用户ID", "user_id").SetUI(column.NewContext())
 	table.AddCol("时间", "created_at", func(val any, items map[string]any) any {
-		return carbon.Time2Carbon(val.(time.Time)).ToDateString()
+		return carbon.Parse(cast.ToString(val)).ToDateTimeString()
 	}).SetUI(column.NewContext())
 
 	links := column.NewLink()
