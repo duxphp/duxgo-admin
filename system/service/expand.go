@@ -169,15 +169,19 @@ func (t *ManageExpand) Del(ctx echo.Context, model any) error {
 			},
 		},
 	}
-	tx := core.Db.Begin()
-	if t.delCall != nil {
-		err := t.delCall(id, tx)
-		if err != nil {
-			return err
+	err := core.Db.Transaction(func(tx *gorm.DB) error {
+		if t.delCall != nil {
+			err := t.delCall(id, tx)
+			if err != nil {
+				return err
+			}
 		}
+		tx.Delete(model, id)
+		return nil
+	})
+	if err != nil {
+		return err
 	}
-	tx.Delete(model, id)
-	tx.Commit()
 	return response.New(ctx).Send("删除数据成功", event)
 }
 
