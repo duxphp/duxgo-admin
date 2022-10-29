@@ -20,6 +20,7 @@ type ManageExpand struct {
 	table       func(echo.Context) *table.Table
 	form        func(echo.Context) *form.Form
 	delCall     func(id string, model *gorm.DB) error
+	recoverCall func(id string, model *gorm.DB) error
 	model       any
 	modelKey    string
 	searchWhere func(ctx echo.Context, model *gorm.DB) (*gorm.DB, error)
@@ -60,6 +61,12 @@ func (t *ManageExpand) SetModel(model any, key string) *ManageExpand {
 // CallDel 设置删除毁掉
 func (t *ManageExpand) CallDel(callback func(id string, model *gorm.DB) error) *ManageExpand {
 	t.delCall = callback
+	return t
+}
+
+// RecoverCall 设置恢复毁掉
+func (t *ManageExpand) RecoverCall(callback func(id string, model *gorm.DB) error) *ManageExpand {
+	t.recoverCall = callback
 	return t
 }
 
@@ -169,20 +176,83 @@ func (t *ManageExpand) Del(ctx echo.Context, model any) error {
 			},
 		},
 	}
+
 	err := core.Db.Transaction(func(tx *gorm.DB) error {
+
 		if t.delCall != nil {
 			err := t.delCall(id, tx)
 			if err != nil {
 				return err
 			}
 		}
-		tx.Delete(model, id)
+		info := map[string]any{}
+		err := tx.Model(model).Unscoped().Find(&info, id).Error
+		if err != nil {
+			return err
+		}
+		if v, ok := info["deleted_at"]; ok {
+			if v != nil && v != "" {
+				tx.Unscoped().Delete(model, id)
+			} else {
+				tx.Delete(model, id)
+			}
+
+		} else {
+			tx.Delete(model, id)
+		}
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 	return response.New(ctx).Send("删除数据成功", event)
+}
+
+// Recover 恢复数据
+func (t *ManageExpand) Recover(ctx echo.Context, model any) error {
+	id := ctx.QueryParam("id")
+	if id == "" {
+		return exception.BusinessError("参数传递错误")
+	}
+
+	event := map[string]any{
+		"__event": map[string]any{
+			"name": t.event,
+			"data": []map[string]any{
+				{
+					"type": "del",
+					"key":  cast.ToUint(id),
+					"data": []map[string]any{},
+				},
+			},
+		},
+	}
+
+	err := core.Db.Transaction(func(tx *gorm.DB) error {
+		if t.delCall != nil {
+			err := t.recoverCall(id, tx)
+			if err != nil {
+				return err
+			}
+		}
+		info := map[string]any{}
+		err := tx.Model(model).Unscoped().Find(&info, id).Error
+		if err != nil {
+			return err
+		}
+		if v, ok := info["deleted_at"]; ok {
+			if v != nil && v != "" {
+				tx.Unscoped().Model(model).Where("id = ?", info["id"]).Update("deleted_at", nil)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	return response.New(ctx).Send("恢复数据成功", event)
+
 }
 
 type SelectParams struct {
