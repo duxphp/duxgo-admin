@@ -55,6 +55,7 @@ func VisitorOperateInfo(ctx echo.Context) error {
 func visitorOperateTable(ctx echo.Context) *table.Table {
 	table := table.NewTable()
 	table.SetModel(&[]model.VisitorOperate{}, "id")
+	table.ModelOrder("id desc")
 
 	table.AddFilter("天数", "day").SetWhere(func(s string, db *gorm.DB) {
 		day := cast.ToInt(s)

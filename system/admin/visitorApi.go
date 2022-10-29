@@ -24,6 +24,7 @@ func VisitorApiAjax(ctx echo.Context) error {
 func visitorApiTable(ctx echo.Context) *table.Table {
 	table := table.NewTable()
 	table.SetModel(&[]model.VisitorApi{}, "id")
+	table.ModelOrder("id desc")
 
 	table.SetUrl("/admin/system/visitorApi/ajax")
 	table.AddAction().SetUI(widget.NewLink("添加", "/admin/system/visitorApi/add").SetButton().SetType("dialog"))
