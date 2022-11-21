@@ -8,7 +8,6 @@ import (
 	coreConfig "github.com/duxphp/duxgo/config"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
-	"syscall"
 )
 
 func Setting(ctx echo.Context) error {
@@ -230,7 +229,7 @@ func settingForm(ctx echo.Context) *form.Form {
 			return err
 		}
 
-		syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+		// syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		return nil
 	})
 	return formUI
