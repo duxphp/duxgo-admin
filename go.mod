@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/dustin/go-humanize v1.0.0
-	github.com/duxphp/duxgo v0.0.0-20221128080108-929e52ed58df
+	github.com/duxphp/duxgo v0.0.0-20221128101848-0c298805f09d
 	github.com/duxphp/duxgo-ui v0.0.0-20221122072638-f526d81ec6a6
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/golang-module/carbon/v2 v2.2.2
