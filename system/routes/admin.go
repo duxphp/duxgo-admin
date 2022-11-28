@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/duxphp/duxgo-admin/system/admin"
+	"github.com/duxphp/duxgo/middleware"
 	"github.com/duxphp/duxgo/util"
 	"github.com/duxphp/duxgo/websocket"
 )
@@ -15,6 +16,8 @@ func RouteAdmin(router *util.RouterData) {
 
 	router.Post("/register", admin.Register, "账号注册")
 
-	router.Get("/ws", websocket.Socket.Handler("admin"), "socket服务")
+	router.Get("/ws", websocket.Socket.Handler("admin", func(data string) (map[string]any, error) {
+		return middleware.NewJWT().ParsingToken("admin", data)
+	}), "socket服务")
 
 }
