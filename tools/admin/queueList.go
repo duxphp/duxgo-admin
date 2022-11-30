@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"github.com/duxphp/duxgo-admin/system/service"
 	"github.com/duxphp/duxgo-ui/lib/form"
 	"github.com/duxphp/duxgo-ui/lib/table"
@@ -43,7 +42,6 @@ func queueTable(ctx echo.Context) *table.Table {
 	tableT.AddFilter("队列类型", "queue").SetUI(form.NewSelect().SetOptions(options)).SetQuick(true).SetDefault("default")
 
 	tableT.SetDataFun(func(filter map[string]any) (collect collection.ICollection) {
-		fmt.Println("test0")
 		qname := filter["queue"].(string)
 		var tasks []*asynq.TaskInfo
 		if filter["tab"] == 0 {
@@ -61,7 +59,6 @@ func queueTable(ctx echo.Context) *table.Table {
 		if filter["tab"] == 4 {
 			tasks, _ = core.QueueInspector.ListArchivedTasks(qname)
 		}
-		fmt.Println("test1")
 
 		type taskI struct {
 			Id      string
@@ -70,7 +67,6 @@ func queueTable(ctx echo.Context) *table.Table {
 			Time    string
 		}
 
-		fmt.Println("test2")
 		var data []taskI
 		var date string
 
@@ -91,8 +87,6 @@ func queueTable(ctx echo.Context) *table.Table {
 				Time:    date,
 			})
 		}
-		fmt.Println("test3")
-
 		return collection.NewObjCollection(data)
 	}, "id")
 
