@@ -43,6 +43,7 @@ func queueTable(ctx echo.Context) *table.Table {
 	tableT.AddFilter("队列类型", "queue").SetUI(form.NewSelect().SetOptions(options)).SetQuick(true).SetDefault("default")
 
 	tableT.SetDataFun(func(filter map[string]any) (collect collection.ICollection) {
+		fmt.Println("test0")
 		qname := filter["queue"].(string)
 		var tasks []*asynq.TaskInfo
 		if filter["tab"] == 0 {
