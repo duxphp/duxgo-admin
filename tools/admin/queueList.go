@@ -60,6 +60,7 @@ func queueTable(ctx echo.Context) *table.Table {
 		if filter["tab"] == 4 {
 			tasks, _ = core.QueueInspector.ListArchivedTasks(qname)
 		}
+		fmt.Println("test1")
 
 		type taskI struct {
 			Id      string
@@ -68,6 +69,7 @@ func queueTable(ctx echo.Context) *table.Table {
 			Time    string
 		}
 
+		fmt.Println("test2")
 		var data []taskI
 		var date string
 
@@ -88,6 +90,7 @@ func queueTable(ctx echo.Context) *table.Table {
 				Time:    date,
 			})
 		}
+		fmt.Println("test3")
 
 		return collection.NewObjCollection(data)
 	}, "id")
@@ -98,6 +101,5 @@ func queueTable(ctx echo.Context) *table.Table {
 
 	tableT.AddCol("时间", "Time").SetUI(column.NewContext()).SetWidth(220)
 
-	fmt.Println("test")
 	return tableT
 }
