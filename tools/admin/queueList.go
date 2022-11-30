@@ -1,7 +1,9 @@
 package admin
 
 import (
+	"fmt"
 	"github.com/duxphp/duxgo-admin/system/service"
+	"github.com/duxphp/duxgo-ui/lib/form"
 	"github.com/duxphp/duxgo-ui/lib/table"
 	"github.com/duxphp/duxgo-ui/lib/table/column"
 	"github.com/duxphp/duxgo/core"
@@ -38,7 +40,7 @@ func queueTable(ctx echo.Context) *table.Table {
 	for _, name := range queueList {
 		options[name] = name
 	}
-	//tableT.AddFilter("队列类型", "queue").SetUI(form.NewSelect().SetOptions(options)).SetQuick(true).SetDefault("default")
+	tableT.AddFilter("队列类型", "queue").SetUI(form.NewSelect().SetOptions(options)).SetQuick(true).SetDefault("default")
 
 	tableT.SetDataFun(func(filter map[string]any) (collect collection.ICollection) {
 		qname := filter["queue"].(string)
@@ -96,5 +98,6 @@ func queueTable(ctx echo.Context) *table.Table {
 
 	tableT.AddCol("时间", "Time").SetUI(column.NewContext()).SetWidth(220)
 
+	fmt.Println("test")
 	return tableT
 }
