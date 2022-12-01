@@ -8,7 +8,6 @@ import (
 	"github.com/duxphp/duxgo/core"
 	"github.com/duxphp/duxgo/exception"
 	"github.com/hibiken/asynq"
-	"github.com/jianfengye/collection"
 	"github.com/labstack/echo/v4"
 )
 
@@ -41,7 +40,7 @@ func queueTable(ctx echo.Context) *table.Table {
 	}
 	tableT.AddFilter("队列类型", "queue").SetUI(form.NewSelect().SetOptions(options)).SetQuick(true).SetDefault("default")
 
-	tableT.SetDataFun(func(filter map[string]any) (collect collection.ICollection) {
+	tableT.SetData(func(filter map[string]any) []any {
 		qname := filter["queue"].(string)
 		var tasks []*asynq.TaskInfo
 		if filter["tab"] == 0 {
@@ -67,7 +66,7 @@ func queueTable(ctx echo.Context) *table.Table {
 			Time    string
 		}
 
-		var data []taskI
+		var data []any
 		var date string
 
 		for _, task := range tasks {
@@ -87,7 +86,7 @@ func queueTable(ctx echo.Context) *table.Table {
 				Time:    date,
 			})
 		}
-		return collection.NewObjCollection(data)
+		return data
 	}, "id")
 
 	tableT.AddCol("ID", "FamilyId").SetUI(column.NewContext())

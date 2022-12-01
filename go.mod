@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/dustin/go-humanize v1.0.0
-	github.com/duxphp/duxgo v0.0.0-20221128101848-0c298805f09d
-	github.com/duxphp/duxgo-ui v0.0.0-20221122072638-f526d81ec6a6
+	github.com/duxphp/duxgo v0.0.0-20221129082508-140c6757bc06
+	github.com/duxphp/duxgo-ui v0.0.0-20221201083224-c8a877284467
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/golang-module/carbon/v2 v2.2.2
 	github.com/hibiken/asynq v0.23.0
@@ -13,8 +13,8 @@ require (
 	github.com/labstack/echo/v4 v4.9.1
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/panjf2000/ants/v2 v2.6.0
-	github.com/samber/lo v1.35.0
-	github.com/shirou/gopsutil/v3 v3.22.10
+	github.com/samber/lo v1.36.0
+	github.com/shirou/gopsutil/v3 v3.22.11
 	github.com/spf13/cast v1.5.0
 	github.com/tidwall/gjson v1.14.4
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
@@ -47,7 +47,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gookit/color v1.5.2 // indirect
 	github.com/gookit/event v1.0.6 // indirect
-	github.com/gookit/goutil v0.5.15 // indirect
+	github.com/gookit/goutil v0.6.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/h2non/filetype v1.1.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
