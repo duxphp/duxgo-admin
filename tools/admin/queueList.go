@@ -24,9 +24,7 @@ func QueueAjax(ctx echo.Context) error {
 
 func queueTable(ctx echo.Context) *table.Table {
 	tableT := table.NewTable()
-
 	tableT.SetUrl("/admin/tools/queueList/ajax")
-
 	tableT.AddTab("处理中")
 	tableT.AddTab("待处理")
 	tableT.AddTab("定时任务")
@@ -40,9 +38,7 @@ func queueTable(ctx echo.Context) *table.Table {
 	}
 	tableT.AddFilter("队列类型", "queue").SetUI(form.NewSelect().SetOptions(options)).SetQuick(true).SetDefault("default")
 
-	core.Logger.Debug().Str("point", "1").Msg("make queue")
 	tableT.SetData(func(filter map[string]any) []any {
-		core.Logger.Debug().Str("point", "2").Msg("make queue")
 		qname := filter["queue"].(string)
 		var tasks []*asynq.TaskInfo
 		if filter["tab"] == 0 {
